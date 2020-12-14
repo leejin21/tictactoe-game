@@ -1,3 +1,14 @@
+# tic-tac-toe game
+
+## exp
+
+USE: react tutorial app
+at version 2.0, maybe I would add graphic
+
+## env
+node -v : 12.18.3
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
