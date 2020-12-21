@@ -82,11 +82,12 @@ class Game extends React.Component {
                     squares: Array(9).fill(null),
                 },
             ],
+            stepNumber: 0,
             XisNext: true,
         };
     }
     handleClick(i) {
-        const history = this.state.history;
+        const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
         // 어떤 배열의 begin부터 end까지(end 미포함)에 대한 얕은 복사본을 새로운 배열 객체로 반환합니다. 원본 배열은 바뀌지 않습니다.
@@ -100,13 +101,32 @@ class Game extends React.Component {
         this.setState({
             history: history.concat([{ squares }]),
             // concat does not mutate the original object
+            stepNumber: history.length,
             XisNext: !this.state.XisNext,
         });
     }
+    jumpTo(step) {
+        this.setState({
+            stepNumber: step,
+            XisNext: step % 2 === 0,
+        });
+    }
+
     render() {
         const history = this.state.history;
-        const current = history[history.length - 1];
+        const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
+
+        // history 적용
+        const moves = history.map((step, move) => {
+            const desc = move ? "Go to move #" + move : "Go to game start";
+            return (
+                <li key={move}>
+                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                </li>
+            );
+        });
+
         let status;
         if (winner) {
             status = "Winner : " + winner;
@@ -123,7 +143,7 @@ class Game extends React.Component {
                 </div>
                 <div className="game-info">
                     <div className="status">{status}</div>
-                    <div>{/* TODO */}</div>
+                    <div>{moves}</div>
                 </div>
             </div>
         );
